@@ -3,8 +3,9 @@ import './header.styles.scss'
 import { Link } from 'react-router-dom'
 import { ReactComponent as Logo } from '../../assets/crown.svg'
 
-// firebase
+// firebase and redux
 import { auth } from '../../firebase/firebase.utils'
+import { connect } from 'react-redux'
 
 const Header = ({ currentUser }) => {
   return (
@@ -30,4 +31,12 @@ const Header = ({ currentUser }) => {
   )
 }
 
-export default Header
+// state is refered to the state of 'store'
+const mapStateToProps = state => {
+  return {
+    // state.user is key in the root-reducer
+    currentUser: state.user.currentUser,
+  }
+}
+
+export default connect(mapStateToProps)(Header)

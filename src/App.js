@@ -3,8 +3,10 @@ import './App.css'
 
 import { Switch, Route } from 'react-router-dom'
 
-// firebase
+// firebase and redux
 import { auth, createUserProfile } from './firebase/firebase.utils'
+import { connect } from 'react-redux'
+import { setCurrentUser } from './redux/user/user.actions'
 
 // pages and components
 import Homepage from './pages/homepage/homepage.component'
@@ -14,15 +16,10 @@ import SignUpPage from './pages/sign-in-sign-up/sign-in-sign-up.component'
 import Header from './components/header/header.component'
 
 class App extends Component {
-  constructor() {
-    super()
-
-    this.state = { currentUser: null }
-  }
-
   unSubscribeFromAuth = null
 
   componentDidMount() {
+    const { setCurrentUser } = this.props
     // this tracks the user auth state
     this.unSubscribeFromAuth = auth.onAuthStateChanged(async user => {
       if (user) {
@@ -31,7 +28,7 @@ class App extends Component {
 
         // fetching and seting the currentUser state
         userRef.onSnapshot(snapShot => {
-          this.setState({
+          setCurrentUser({
             currentUser: {
               id: snapShot.id,
               ...snapShot.data(),
@@ -39,7 +36,7 @@ class App extends Component {
           })
         })
       } else {
-        this.setState({ currentUser: null })
+        setCurrentUser(user)
       }
     })
   }
@@ -49,11 +46,9 @@ class App extends Component {
   }
 
   render() {
-    const { currentUser } = this.state
-
     return (
       <div className='App'>
-        <Header currentUser={currentUser} />
+        <Header />
         <Switch>
           <Route exact path='/' component={Homepage} />
           <Route path='/shop' component={Shop} />
@@ -64,4 +59,13 @@ class App extends Component {
   }
 }
 
-export default App
+// dispatch() takes the action object iie {type:, paylaod:}
+const mapDispatchToProps = dispatch => {
+  return {
+    setCurrentUser: user => dispatch(setCurrentUser(user)),
+  }
+}
+
+// connect()() connects to the redux store
+// take mapstate, and dispatch
+export default connect(null, mapDispatchToProps)(App)
