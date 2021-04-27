@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './App.css'
 
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
 
 // firebase and redux
 import { auth, createUserProfile } from './firebase/firebase.utils'
@@ -46,16 +46,27 @@ class App extends Component {
   }
 
   render() {
+    const { currentUser } = this.props
     return (
       <div className='App'>
         <Header />
         <Switch>
           <Route exact path='/' component={Homepage} />
           <Route path='/shop' component={Shop} />
-          <Route path='/login' component={SignUpPage} />
+          <Route
+            exact
+            path='/login'
+            render={() => (currentUser ? <Redirect to='/' /> : <SignUpPage />)}
+          />
         </Switch>
       </div>
     )
+  }
+}
+
+const mapStateToProps = ({ user }) => {
+  return {
+    currentUser: user.currentUser,
   }
 }
 
@@ -68,4 +79,4 @@ const mapDispatchToProps = dispatch => {
 
 // connect()() connects to the redux store
 // take mapstate, and dispatch
-export default connect(null, mapDispatchToProps)(App)
+export default connect(mapStateToProps, mapDispatchToProps)(App)
