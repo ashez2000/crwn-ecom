@@ -14,6 +14,7 @@ import { selectCurrentUser } from './redux/user/user.selector'
 import Homepage from './pages/homepage/homepage.component'
 import Shop from './pages/shop/shop.component'
 import SignUpPage from './pages/sign-in-sign-up/sign-in-sign-up.component'
+import CheckoutPage from './pages/checkout/checkout.component'
 
 import Header from './components/header/header.component'
 
@@ -60,6 +61,7 @@ class App extends Component {
             path='/login'
             render={() => (currentUser ? <Redirect to='/' /> : <SignUpPage />)}
           />
+          <Route exact path='/checkout' component={CheckoutPage} />
         </Switch>
       </div>
     )

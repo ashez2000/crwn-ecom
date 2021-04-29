@@ -15,6 +15,10 @@ export const selectCartItemsCount = createSelector(
 
 export const selectHidden = createSelector([selectCart], cart => cart.hidden)
 
+export const selectCartTotal = createSelector([selectCartItems], cartItems =>
+  cartItems.reduce((acc, i) => acc + i.quantity * i.price, 0)
+)
+
 // reselect id for getting a peice of data from the store
 // this comes with some inbuild memoization
 // main purpose is to optimize performance
