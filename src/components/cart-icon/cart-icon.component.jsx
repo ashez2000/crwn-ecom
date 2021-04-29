@@ -4,6 +4,7 @@ import { ReactComponent as CartIcon } from '../../assets/cart.svg'
 // redux
 import { connect } from 'react-redux'
 import { toggleCart } from '../../redux/cart/cart.actions'
+import { selectCartItemsCount } from '../../redux/cart/cart.selector'
 
 const CartItem = ({ toggleCart, itemCount }) => {
   return (
@@ -14,9 +15,10 @@ const CartItem = ({ toggleCart, itemCount }) => {
   )
 }
 
-const mapStateToProps = ({ cart: { cartItems } }) => {
+// using reselect now
+const mapStateToProps = state => {
   return {
-    itemCount: cartItems.reduce((acc, i) => acc + i.quantity, 0),
+    itemCount: selectCartItemsCount(state),
   }
 }
 
