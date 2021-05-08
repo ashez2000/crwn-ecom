@@ -50,3 +50,31 @@ export const createUserProfile = async (user, additionalData) => {
 
   return userRef
 }
+
+// inserting arr collection to the firestore
+export const addCollectionAndDocs = (collectionKey, objectsAdd) => {
+  const collectionRef = firestore.collection(collectionKey)
+
+  // starting a process with adds the each obj to firestore
+  const batch = firestore.batch()
+  objectsAdd.forEach(obj => {
+    const newDocRef = collectionRef.doc()
+    batch.set(newDocRef, obj)
+  })
+
+  batch.commit()
+}
+
+// func to load collection from firestore
+export const convertCollectionSnapshotToMap = collections => {
+  const transformedCollection = collections.docs.map(doc => {
+    const { title, items } = doc.data()
+    return {
+      routeName: encodeURI(title.toLowerCase()),
+      id: doc.id,
+      title,
+      items,
+    }
+  })
+  console.log(transformedCollection)
+}

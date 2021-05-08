@@ -4,11 +4,16 @@ import './App.css'
 import { Switch, Route, Redirect } from 'react-router-dom'
 
 // firebase and redux
-import { auth, createUserProfile } from './firebase/firebase.utils'
+import {
+  auth,
+  createUserProfile,
+  addCollectionAndDocs,
+} from './firebase/firebase.utils'
 import { connect } from 'react-redux'
 import { setCurrentUser } from './redux/user/user.actions'
 import { createStructuredSelector } from 'reselect'
 import { selectCurrentUser } from './redux/user/user.selector'
+import { selectCollectionForPreview } from './redux/shop/shop.selector'
 
 // pages and components
 import Homepage from './pages/homepage/homepage.component'
@@ -22,7 +27,7 @@ class App extends Component {
   unSubscribeFromAuth = null
 
   componentDidMount() {
-    const { setCurrentUser } = this.props
+    const { setCurrentUser, collectionArr } = this.props
     // this tracks the user auth state
     this.unSubscribeFromAuth = auth.onAuthStateChanged(async user => {
       if (user) {
@@ -42,6 +47,11 @@ class App extends Component {
         setCurrentUser(user)
       }
     })
+
+    // addCollectionAndDocs(
+    //   'collections',
+    //   collectionArr.map(({ title, items }) => ({ title, items }))
+    // )
   }
 
   componentWillUnmount() {
@@ -70,6 +80,7 @@ class App extends Component {
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
+  collectionArr: selectCollectionForPreview,
 })
 
 // dispatch() takes the action object iie {type:, paylaod:}
