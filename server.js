@@ -10,6 +10,7 @@ import Order from "./models/order.model.js";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
+const __dirname = path.resolve();
 
 connectDb();
 
